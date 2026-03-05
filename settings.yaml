@@ -1584,6 +1584,42 @@ spec:
               help: 首页最多展示的友链数量（仅前端截断，不限制后端加载，插件问题，暂不支持数量限制），0 为不限制
               value: 0
               validation: min:0
+        # 文档中心模块设置
+        - $formkit: group
+          name: docs_settings
+          label: 文档中心模块
+          help: 需安装 Docsme 文档插件 (plugin-docsme) ≥1.4.0
+          value:
+            enable_docs: true
+            docs_title: "文档中心"
+            docs_subtitle: "Documentation"
+            docs_count: 6
+          children:
+            - $formkit: switch
+              id: enable_docs
+              name: enable_docs
+              label: 启用文档中心
+              help: 是否在首页显示文档中心模块
+              value: true
+            - $formkit: text
+              name: docs_title
+              if: $get(enable_docs).value
+              label: 模块标题
+              help: 文档中心模块的标题文字
+              value: "文档中心"
+            - $formkit: text
+              name: docs_subtitle
+              if: $get(enable_docs).value
+              label: 模块副标题
+              help: 文档中心模块的副标题文字
+              value: "Documentation"
+            - $formkit: number
+              name: docs_count
+              if: $get(enable_docs).value
+              label: 显示数量
+              help: 首页最多展示的文档项目数量，默认 6
+              value: 6
+              validation: min:1
         - $formkit: group
           name: floating_dock
           label: 悬浮控制栏
