@@ -249,18 +249,55 @@
   <div class="drawer-side z-[100]">
     <label for="mobile-menu-drawer" aria-label="close sidebar" class="drawer-overlay"></label>
 
-    <aside class="min-h-full w-[17rem] flex flex-col relative overflow-hidden
+    <aside class="h-screen w-[17rem] flex flex-col relative overflow-hidden
                   bg-base-100 border-r border-base-content/6
                   shadow-[4px_0_40px_-8px_rgba(0,0,0,0.12)]
                   drawer-slide-in">
 
-      <!-- 顶部极淡装饰光晕 -->
+      <!-- 滚动条美化样式 -->
+      <style>
+        #mobile-nav-scroll::-webkit-scrollbar {
+          width: 3px;
+        }
+
+        #mobile-nav-scroll::-webkit-scrollbar-track {
+          background: transparent;
+        }
+
+        #mobile-nav-scroll::-webkit-scrollbar-thumb {
+          background: oklch(var(--bc) / 0.12);
+          border-radius: 999px;
+          transition: background 0.2s;
+        }
+
+        #mobile-nav-scroll::-webkit-scrollbar-thumb:hover {
+          background: oklch(var(--bc) / 0.25);
+        }
+
+        /* 头像区点阵纹理 */
+        .sidebar-header-texture {
+          background-image: radial-gradient(circle,
+              oklch(var(--bc) / 0.06) 1px,
+              transparent 1px);
+          background-size: 16px 16px;
+          -webkit-mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
+          mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
+        }
+      </style>
+
+      <!-- 層次装饰光晕 -->
+      <!-- 左上 primary 光晕 -->
+      <div class="absolute -top-16 -left-8 w-52 h-52 bg-primary/8 rounded-full blur-3xl pointer-events-none"></div>
+      <!-- 右下 second 对角光晕 (与左上呗应) -->
+      <div class="absolute -bottom-20 -right-10 w-48 h-48 bg-secondary/6 rounded-full blur-3xl pointer-events-none">
+      </div>
+      <!-- 右侧渐变光边（增加立体感）-->
       <div
-        class="absolute -top-20 left-1/2 -translate-x-1/2 w-56 h-56 bg-primary/6 rounded-full blur-3xl pointer-events-none">
+        class="absolute inset-y-0 right-0 w-[1px] bg-gradient-to-b from-transparent via-base-content/10 to-transparent pointer-events-none">
       </div>
 
       <!-- ===== 头部：居中头像/Logo + 名称 + 统计 ===== -->
-      <div class="relative px-6 pt-8 pb-5" th:with="currentUser = ${contributorFinder.getContributor(#authentication.name)},
+      <div class="relative px-6 pt-8 pb-5 sidebar-header-texture overflow-hidden" th:with="currentUser = ${contributorFinder.getContributor(#authentication.name)},
                  isLoggedIn = ${!#strings.equals(currentUser.name, 'anonymousUser')}">
 
         <div class="flex flex-col items-center">
@@ -296,7 +333,6 @@
             th:text="${siteTitle}">站点名称</a>
 
           <!-- 副标题 -->
-          <p th:if="${isLoggedIn}" class="text-xs text-base-content/40 mt-1">查看个人中心</p>
           <p th:unless="${isLoggedIn}" class="text-xs text-base-content/40 mt-1"
             th:text="${#strings.abbreviate(siteSubtitle ?: '', 24)}">一段简介</p>
         </div>
@@ -306,35 +342,33 @@
                    allTags = ${tagFinder.listAll()},
                    allCategories = ${categoryFinder.listAsTree()}">
           <a href="/archives" class="flex flex-col items-center group">
-            <span class="text-base font-bold text-base-content group-hover:text-primary transition-colors"
+            <span
+              class="text-lg font-mono font-bold tracking-tight text-base-content group-hover:text-primary group-hover:scale-110 transition-all duration-300"
               th:text="${allPosts.total}">0</span>
-            <span class="text-xs text-base-content/40 mt-0.5">文章</span>
+            <span class="text-xs text-base-content/40 mt-1">文章</span>
           </a>
           <div class="w-px h-6 bg-base-content/10"></div>
           <a href="/tags" class="flex flex-col items-center group">
-            <span class="text-base font-bold text-base-content group-hover:text-primary transition-colors"
+            <span
+              class="text-lg font-mono font-bold tracking-tight text-base-content group-hover:text-primary group-hover:scale-110 transition-all duration-300"
               th:text="${#lists.size(allTags)}">0</span>
-            <span class="text-xs text-base-content/40 mt-0.5">标签</span>
+            <span class="text-xs text-base-content/40 mt-1">标签</span>
           </a>
           <div class="w-px h-6 bg-base-content/10"></div>
           <a href="/categories" class="flex flex-col items-center group">
-            <span class="text-base font-bold text-base-content group-hover:text-primary transition-colors"
+            <span
+              class="text-lg font-mono font-bold tracking-tight text-base-content group-hover:text-primary group-hover:scale-110 transition-all duration-300"
               th:text="${#lists.size(allCategories)}">0</span>
-            <span class="text-xs text-base-content/40 mt-0.5">分类</span>
+            <span class="text-xs text-base-content/40 mt-1">分类</span>
           </a>
         </div>
       </div>
 
-      <!-- 装饰分割 -->
-      <div class="flex items-center justify-center gap-2 py-1 mx-5">
-        <span class="w-1 h-1 rounded-full bg-base-content/12"></span>
-        <span class="w-1.5 h-1.5 rounded-full bg-base-content/18"></span>
-        <span class="w-1 h-1 rounded-full bg-base-content/12"></span>
-      </div>
+
 
       <!-- ===== 菜单区域 ===== -->
-      <div class="flex-1 px-3 py-4 overflow-y-auto">
-        <nav class="space-y-0.5">
+      <div id="mobile-nav-scroll" class="flex-1 px-3 py-4 overflow-y-auto overscroll-contain">
+        <nav class="space-y-0.5 pb-4">
           <th:block
             th:with="primaryMenu = ${menuFinder.getByName(theme.config.nav.menu_settings.primary_menu ?: 'primary')}">
             <div th:each="menuItem, iterStat : ${primaryMenu.menuItems}">
@@ -357,7 +391,8 @@
                         <span class="icon-[heroicons--folder] w-full h-full"></span>
                       </th:block>
                     </span>
-                    <span class="flex-1 text-sm font-medium text-left"
+                    <span
+                      class="flex-1 text-sm font-medium text-left transition-transform duration-300 group-hover:translate-x-1"
                       th:text="${menuItem.status.displayName}">菜单项</span>
                     <span
                       class="icon-[heroicons--chevron-down] w-3.5 h-3.5 text-base-content/25 transition-transform duration-300 flex-shrink-0"
@@ -382,7 +417,8 @@
                         th:unless="${childItem.metadata?.annotations != null &amp;&amp; childItem.metadata.annotations['icon'] != null}">
                         <span class="w-1.5 h-1.5 rounded-full bg-base-content/20 flex-shrink-0"></span>
                       </th:block>
-                      <span th:text="${childItem.status.displayName}">子项</span>
+                      <span class="transition-transform duration-300 group-hover:translate-x-1"
+                        th:text="${childItem.status.displayName}">子项</span>
                     </a>
                   </div>
                 </div>
@@ -405,7 +441,8 @@
                       <span class="icon-[heroicons--link] w-full h-full"></span>
                     </th:block>
                   </span>
-                  <span class="text-sm font-medium" th:text="${menuItem.status.displayName}">菜单项</span>
+                  <span class="text-sm font-medium transition-transform duration-300 group-hover:translate-x-1"
+                    th:text="${menuItem.status.displayName}">菜单项</span>
                 </a>
               </th:block>
 
@@ -414,37 +451,9 @@
         </nav>
       </div>
 
-      <!-- 装饰分割 -->
-      <div class="flex items-center justify-center gap-2 py-1 mx-5">
-        <span class="w-1 h-1 rounded-full bg-base-content/12"></span>
-        <span class="w-1.5 h-1.5 rounded-full bg-base-content/18"></span>
-        <span class="w-1 h-1 rounded-full bg-base-content/12"></span>
-      </div>
-
-      <!-- ===== 底部工具栏 ===== -->
-      <div class="px-5 py-3.5 flex items-center justify-between">
-        <div th:if="${theme.config.nav.theme_settings.show_theme_toggle}" x-data="createThemeToggle()" th:attr="data-light-theme=${theme.config.nav.theme_settings.light_theme},
-                   data-dark-theme=${theme.config.nav.theme_settings.dark_theme},
-                   data-default-theme=${theme.config.nav.theme_settings.default_theme}"
-          x-init="$nextTick(() => init())">
-          <button @click="toggleTheme()" class="w-9 h-9 rounded-xl flex items-center justify-center
-                   text-base-content/35 hover:text-primary hover:bg-primary/8 transition-all duration-200"
-            :title="isDark ? '切换到浅色模式' : '切换到深色模式'">
-            <span x-cloak x-show="!isDark" class="icon-[heroicons--sun] w-[1.15rem] h-[1.15rem]"></span>
-            <span x-cloak x-show="isDark" class="icon-[heroicons--moon] w-[1.15rem] h-[1.15rem]"></span>
-          </button>
-        </div>
-        <div th:if="${theme.config.nav.right_settings.show_search and pluginFinder.available('PluginSearchWidget')}">
-          <button onclick="SearchWidget.open(); document.getElementById('mobile-menu-drawer').checked = false;" class="w-9 h-9 rounded-xl flex items-center justify-center
-                   text-base-content/35 hover:text-primary hover:bg-primary/8 transition-all duration-200">
-            <span class="icon-[heroicons--magnifying-glass] w-[1.15rem] h-[1.15rem]"></span>
-          </button>
-        </div>
-        <label for="mobile-menu-drawer" class="w-9 h-9 rounded-xl flex items-center justify-center
-                 text-base-content/30 hover:text-base-content/60 hover:bg-base-content/5
-                 transition-all duration-200 cursor-pointer">
-          <span class="icon-[heroicons--x-mark] w-[1.15rem] h-[1.15rem]"></span>
-        </label>
+      <!-- 底部遮罩淡出 -->
+      <div
+        class="absolute bottom-0 left-0 right-0 h-6 bg-gradient-to-t from-base-100 to-transparent pointer-events-none z-10">
       </div>
 
     </aside>
