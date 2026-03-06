@@ -3689,9 +3689,15 @@ spec:
           value:
             auth_layout: default
             brand_style: simple
-            card_effect: none
+            card_effect: 3d
             brand_slogan: "探索、记录、分享"
-            show_brand_area: true
+            features_welcome: "欢迎来到"
+            feature_1_title: "安全可靠"
+            feature_1_desc: "基于 Spring Security 的账户保护"
+            feature_2_title: "内容推荐"
+            feature_2_desc: "为您量身定制的阅读体验"
+            feature_3_title: "多端同步"
+            feature_3_desc: "随时随地访问您的创作"
           children:
             - $formkit: toggle
               id: auth_layout
@@ -3752,76 +3758,90 @@ spec:
               if: $get(auth_layout).value === 'split'
               placeholder: "探索、记录、分享"
               value: "探索、记录、分享"
-            - $formkit: group
-              name: style_features
-              label: 功能特性风格配置
+            - $formkit: attachment
+              name: auth_logo
+              label: 功能区 Logo
+              help: 留空则使用站点默认 Logo
+              accepts: ['image/*']
               if: $get(auth_layout).value === 'split' && $get(brand_style).value === 'features'
-              children:
-                - $formkit: attachment
-                  name: auth_logo
-                  label: Logo
-                  help: 留空则使用站点默认 Logo
-                  accepts: ['image/*']
-                - $formkit: text
-                  name: auth_site_title
-                  label: 标题
-                  help: 留空则使用站点默认标题
-                  placeholder: "留空使用站点标题"
-                - $formkit: attachment
-                  name: auth_side_image
-                  label: 侧边栏背景图
-                  help: 自定义侧边栏的背景图片，上传后将覆盖默认的渐变背景
-                  accepts: ['image/*']
-                - $formkit: text
-                  name: features_welcome
-                  label: 欢迎语
-                  placeholder: "欢迎来到"
-                  value: "欢迎来到"
-                
-                # 特性 1
-                - $formkit: iconify
-                  name: feature_1_icon
-                  label: 特性 1 图标
-                  format: svg
-                  value-only: true
-                - $formkit: text
-                  name: feature_1_title
-                  label: 特性 1 标题
-                  value: "安全可靠"
-                - $formkit: text
-                  name: feature_1_desc
-                  label: 特性 1 描述
-                  value: "基于 Spring Security 的账户保护"
+              key: auth_logo_field
+            - $formkit: text
+              name: auth_site_title
+              label: 功能区标题
+              help: 留空则使用站点默认标题
+              placeholder: "留空使用站点标题"
+              if: $get(auth_layout).value === 'split' && $get(brand_style).value === 'features'
+              key: auth_site_title_field
+            - $formkit: attachment
+              name: auth_side_image
+              label: 侧边栏背景图
+              help: 自定义侧边栏的背景图片，上传后将覆盖默认的渐变背景
+              accepts: ['image/*']
+              if: $get(auth_layout).value === 'split' && $get(brand_style).value === 'features'
+              key: auth_side_image_field
+            - $formkit: text
+              name: features_welcome
+              label: 欢迎语
+              placeholder: "欢迎来到"
+              if: $get(auth_layout).value === 'split' && $get(brand_style).value === 'features'
+              key: features_welcome_field
+            
+            # 特性 1
+            - $formkit: iconify
+              name: feature_1_icon
+              label: 特性 1 图标
+              format: svg
+              value-only: true
+              if: $get(auth_layout).value === 'split' && $get(brand_style).value === 'features'
+              key: auth_f1_icon_field
+            - $formkit: text
+              name: feature_1_title
+              label: 特性 1 标题
+              if: $get(auth_layout).value === 'split' && $get(brand_style).value === 'features'
+              key: auth_f1_title_field
+            - $formkit: text
+              name: feature_1_desc
+              label: 特性 1 描述
+              if: $get(auth_layout).value === 'split' && $get(brand_style).value === 'features'
+              key: auth_f1_desc_field
 
-                # 特性 2
-                - $formkit: iconify
-                  name: feature_2_icon
-                  label: 特性 2 图标
-                  format: svg
-                  value-only: true
-                - $formkit: text
-                  name: feature_2_title
-                  label: 特性 2 标题
-                  value: "内容推荐"
-                - $formkit: text
-                  name: feature_2_desc
-                  label: 特性 2 描述
-                  value: "为您量身定制的阅读体验"
+            # 特性 2
+            - $formkit: iconify
+              name: feature_2_icon
+              label: 特性 2 图标
+              format: svg
+              value-only: true
+              if: $get(auth_layout).value === 'split' && $get(brand_style).value === 'features'
+              key: auth_f2_icon_field
+            - $formkit: text
+              name: feature_2_title
+              label: 特性 2 标题
+              if: $get(auth_layout).value === 'split' && $get(brand_style).value === 'features'
+              key: auth_f2_title_field
+            - $formkit: text
+              name: feature_2_desc
+              label: 特性 2 描述
+              if: $get(auth_layout).value === 'split' && $get(brand_style).value === 'features'
+              key: auth_f2_desc_field
 
-                # 特性 3
-                - $formkit: iconify
-                  name: feature_3_icon
-                  label: 特性 3 图标
-                  format: svg
-                  value-only: true
-                - $formkit: text
-                  name: feature_3_title
-                  label: 特性 3 标题
-                  value: "多端同步"
-                - $formkit: text
-                  name: feature_3_desc
-                  label: 特性 3 描述
-                  value: "随时随地访问您的创作"
+            # 特性 3
+            - $formkit: iconify
+              name: feature_3_icon
+              label: 特性 3 图标
+              format: svg
+              value-only: true
+              if: $get(auth_layout).value === 'split' && $get(brand_style).value === 'features'
+              key: auth_f3_icon_field
+            - $formkit: text
+              name: feature_3_title
+              label: 特性 3 标题
+              if: $get(auth_layout).value === 'split' && $get(brand_style).value === 'features'
+              key: auth_f3_title_field
+            - $formkit: text
+              name: feature_3_desc
+              label: 特性 3 描述
+              if: $get(auth_layout).value === 'split' && $get(brand_style).value === 'features'
+              key: auth_f3_desc_field
 
 
     - group: bangumi_settings
