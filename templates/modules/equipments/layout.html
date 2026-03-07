@@ -21,7 +21,9 @@
   <th:block th:replace="~{modules/theme-script :: inline-script}" />
 
   <!-- 页面标题 -->
-  <title th:text="${pageTitle} + ' | ' + ${site.title}">装备</title>
+  <title
+    th:text="${pageTitle} + ' | ' + ${site.title} + (${site.subtitle != null and !#strings.isEmpty(site.subtitle)} ? ' - ' + ${site.subtitle} : '')">
+    装备</title>
 
   <!-- SEO Meta -->
   <meta name="description" th:content="${pageDesc}" />

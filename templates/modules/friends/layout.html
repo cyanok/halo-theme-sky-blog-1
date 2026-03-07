@@ -18,7 +18,8 @@
   <th:block th:replace="~{modules/theme-script :: inline-script}" />
 
   <!-- 页面标题 -->
-  <title th:text="${(theme.config.friends_page_settings?.basic_info?.page_title ?: '朋友圈')} + ' - ' + ${site.title}">
+  <title
+    th:text="${(theme.config.friends_page_settings?.basic_info?.page_title ?: '朋友圈')} + ' - ' + ${site.title} + (${site.subtitle != null and !#strings.isEmpty(site.subtitle)} ? ' - ' + ${site.subtitle} : '')">
   </title>
   <!-- 字体 -->
   <th:block th:replace="~{modules/font-loader :: fonts}" />

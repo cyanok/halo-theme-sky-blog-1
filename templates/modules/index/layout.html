@@ -16,7 +16,9 @@
   <th:block th:replace="~{modules/critical-css :: critical}" />
 
   <!-- 页面标题 -->
-  <title th:text="${site.title}"></title>
+  <title
+    th:text="${site.subtitle != null and !#strings.isEmpty(site.subtitle) ? site.title + ' - ' + site.subtitle : site.title}">
+  </title>
   <!-- 字体 - 异步加载，不阻塞渲染 -->
   <th:block th:replace="~{modules/font-loader :: fonts}" />
   <!-- 主题样式 -->

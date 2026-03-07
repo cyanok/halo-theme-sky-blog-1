@@ -17,7 +17,8 @@
 
   <!-- 页面标题 -->
   <title th:with="pageTitle=${theme.config.moments_settings?.page_title ?: '瞬间'}"
-    th:text="${pageTitle} + '-' + ${site.title}"></title>
+    th:text="${pageTitle} + ' - ' + ${site.title} + (${site.subtitle != null and !#strings.isEmpty(site.subtitle)} ? ' - ' + ${site.subtitle} : '')">
+  </title>
 
   <!-- 字体 -->
   <th:block th:replace="~{modules/font-loader :: fonts}" />

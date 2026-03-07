@@ -18,7 +18,9 @@
   <th:block th:replace="~{modules/theme-script :: inline-script}" />
 
   <!-- 页面标题 -->
-  <title th:text="'追番 - ' + ${site.title}">追番</title>
+  <title
+    th:text="'追番 - ' + ${site.title} + (${site.subtitle != null and !#strings.isEmpty(site.subtitle)} ? ' - ' + ${site.subtitle} : '')">
+    追番</title>
 
   <!-- Favicon -->
   <link rel="icon" type="image/x-icon" th:href="${site.favicon}" />
@@ -41,11 +43,8 @@
   <!-- 动态番剧背景 -->
   <div th:if="${bgCover != null}" class="fixed inset-0 z-0 pointer-events-none" id="bangumi-bg-container">
     <img th:src="${#strings.contains(bgCover, '@') ? #strings.substringBefore(bgCover, '@') : bgCover}"
-         class="w-full h-full object-cover object-top transition-opacity duration-500"
-         style="opacity: 0.4;"
-         referrerpolicy="no-referrer"
-         alt=""
-         id="bangumi-bg-img" />
+      class="w-full h-full object-cover object-top transition-opacity duration-500" style="opacity: 0.4;"
+      referrerpolicy="no-referrer" alt="" id="bangumi-bg-img" />
     <div class="absolute inset-0 bg-gradient-to-b from-transparent via-base-100/50 to-base-100"></div>
   </div>
 
