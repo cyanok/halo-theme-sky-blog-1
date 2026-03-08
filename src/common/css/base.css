@@ -640,6 +640,12 @@ html.theme-transitioning * {
     animation-name: alpine-slide-up;
 }
 
+/* 修复：防止 body 或顶级容器应用 transform 动画导致 fixed 定位失效 (如 Live2D 看板娘) */
+body[x-data]:not([x-cloak]) {
+    animation: none !important;
+    transform: none !important;
+}
+
 /* 基础淡入（默认） */
 @keyframes alpine-fade-in {
     from {
