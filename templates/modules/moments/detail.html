@@ -60,8 +60,9 @@
             <!-- 单图 -->
             <th:block th:if="${#lists.size(content.medium) == 1}">
               <th:block th:each="medium : ${content.medium}">
-                <img th:if="${medium.type.name == 'PHOTO'}" th:src="${medium.url}" alt="瞬间图片"
-                  class="rounded-xl max-h-72 object-cover cursor-pointer" loading="lazy" />
+                <div th:if="${medium.type.name == 'PHOTO'}" class="moment-single-img-wrap">
+                  <img th:src="${medium.url}" alt="瞬间图片" class="max-h-72 object-cover" loading="lazy" />
+                </div>
                 <video th:if="${medium.type.name == 'VIDEO'}" th:src="${medium.url}" controls preload="metadata"
                   class="rounded-xl max-h-72 w-full">
                 </video>
@@ -71,18 +72,32 @@
               </th:block>
             </th:block>
 
-            <!-- 多图网格 -->
+            <!-- 多图网格 (动态排版 2-9图) -->
             <div th:if="${#lists.size(content.medium) > 1}" class="grid gap-1 rounded-xl overflow-hidden"
-              th:classappend="${#lists.size(content.medium) == 2 or #lists.size(content.medium) == 4} ? 'grid-cols-2' : 'grid-cols-3'">
+              th:classappend="${
+                #lists.size(content.medium) == 2 ? 'grid-cols-2 w-3/4' : 
+                #lists.size(content.medium) == 3 ? 'grid-cols-3' : 
+                #lists.size(content.medium) == 4 ? 'grid-cols-2 w-3/4' : 
+                #lists.size(content.medium) == 5 ? 'grid-cols-6' : 
+                #lists.size(content.medium) == 6 ? 'grid-cols-3' : 
+                #lists.size(content.medium) == 7 ? 'grid-cols-12' : 
+                #lists.size(content.medium) == 8 ? 'grid-cols-6' : 'grid-cols-3'
+              }">
               <th:block th:each="medium, stat : ${content.medium}">
-                <div th:if="${medium.type.name == 'PHOTO' && stat.index < 9}"
-                  class="aspect-square relative bg-base-200 overflow-hidden cursor-pointer">
-                  <img th:src="${medium.url}" alt="瞬间图片"
-                    class="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                    loading="lazy" />
+                <div th:if="${medium.type.name == 'PHOTO' && stat.index < 9}" class="moment-grid-item" th:classappend="${
+                    #lists.size(content.medium) == 3 && stat.index == 0 ? 'col-span-2 row-span-2 aspect-square' : 
+                    #lists.size(content.medium) == 3 && stat.index > 0 ? 'col-span-1 aspect-square' :
+                    #lists.size(content.medium) == 5 && stat.index < 2 ? 'col-span-3 aspect-[4/3]' : 
+                    #lists.size(content.medium) == 5 && stat.index >= 2 ? 'col-span-2 aspect-square' : 
+                    #lists.size(content.medium) == 7 && stat.index < 3 ? 'col-span-4 aspect-square' : 
+                    #lists.size(content.medium) == 7 && stat.index >= 3 ? 'col-span-3 aspect-square' : 
+                    #lists.size(content.medium) == 8 && stat.index < 2 ? 'col-span-3 aspect-[4/3]' : 
+                    #lists.size(content.medium) == 8 && stat.index >= 2 ? 'col-span-2 aspect-square' : 'aspect-square'
+                  }">
+                  <img th:src="${medium.url}" alt="瞬间图片" loading="lazy" />
                   <div th:if="${stat.index == 8 && #lists.size(content.medium) > 9}"
-                    class="absolute inset-0 bg-black/50 flex items-center justify-center">
-                    <span class="text-white font-semibold"
+                    class="absolute inset-0 bg-black/50 flex items-center justify-center" style="z-index:2">
+                    <span class="text-white text-xl font-semibold"
                       th:text="'+' + (${#lists.size(content.medium)} - 9)">+3</span>
                   </div>
                 </div>
