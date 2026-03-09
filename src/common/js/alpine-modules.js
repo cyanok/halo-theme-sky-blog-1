@@ -647,17 +647,23 @@ function welcomeWeatherCard() {
     // ═══════ IP 定位路由 ═══════
 
     async getLocationByPconline() {
+      const fallbackRegion = this.$el.dataset.fallbackRegion || '北京';
+
       try {
         const data = await this.fetchWithTimeout('https://pconline.xoku.cn/', {}, 6000).then(r => r.json());
         const rawCity = data.city || data.addr || '';
         const city = rawCity.replace('市', '').trim() || '未知';
         const bad = city.includes('美国') || city.includes('CloudFlare') || city.includes('节点') || city === '未知';
-        if (city && !bad) return { city, adcode: '', source: 'pconline' };
-        console.warn('[Weather] pconline 返回异常城市，降级');
-        return { city: '未知', adcode: '', source: 'fallback' };
+
+        if (city && !bad) {
+          return { city, adcode: '', source: 'pconline' };
+        }
+
+        if (window.SYS_WEATHER_DEBUG) console.warn(`[Weather] IP定位返回异常城市(${city})，已降级启用默认地区: ${fallbackRegion}`);
+        return { city: fallbackRegion, adcode: '', source: 'fallback_region' };
       } catch (e) {
-        console.warn('[Weather] pconline 失败:', e.message);
-        return { city: '未知', adcode: '', source: 'fallback' };
+        if (window.SYS_WEATHER_DEBUG) console.warn('[Weather] pconline 请求失败或被拦截:', e.message, `| 已降级启用默认地区: ${fallbackRegion}`);
+        return { city: fallbackRegion, adcode: '', source: 'fallback_region' };
       }
     },
 
