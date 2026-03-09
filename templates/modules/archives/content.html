@@ -31,25 +31,7 @@
           </div>
         </header>
 
-        <!-- 年份月份快速导航 - 优化版 -->
-        <div class="mb-8 space-y-3"
-          th:if="${archives != null and archives.items != null and !#lists.isEmpty(archives.items)}">
-          <div th:each="archive : ${archives.items}" class="flex flex-wrap items-center gap-2">
-            <!-- 年份标签 -->
-            <a th:href="|#year-${archive.year}|"
-              class="px-4 py-2 rounded-xl text-sm font-bold bg-gradient-to-br from-primary/90 to-primary text-primary-content shadow-md shadow-primary/20 hover:shadow-lg hover:shadow-primary/30 hover:scale-105 transition-all">
-              <span th:text="${archive.year}"></span>
-            </a>
-            <!-- 月份按钮 -->
-            <th:block th:each="monthData : ${archive.months}">
-              <a th:href="|#month-${archive.year}-${monthData.month}|"
-                class="px-3 py-1.5 rounded-lg text-sm bg-base-200/70 text-base-content/70 hover:bg-base-200 hover:text-base-content hover:scale-105 transition-all">
-                <span th:text="${monthData.month + '月'}"></span>
-                <span class="ml-1 text-xs opacity-60" th:text="${#lists.size(monthData.posts)}"></span>
-              </a>
-            </th:block>
-          </div>
-        </div>
+
 
         <!-- 归档时间线 -->
         <div class="archive-timeline space-y-12" th:if="${archives != null and archives.items != null}"

@@ -78,6 +78,10 @@
           <th:block th:replace="~{modules/post/toc :: widget}" />
         </th:block>
 
+        <th:block th:if="${widgetType eq 'archive_sidebar'}">
+          <th:block th:replace="~{modules/widgets/archive-sidebar :: widget}" />
+        </th:block>
+
       </th:block>
     </th:block>
   </th:block>

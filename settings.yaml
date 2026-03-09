@@ -2322,29 +2322,25 @@ spec:
           name: sidebar_settings
           label: 侧边栏设置
           value:
-            show_sidebar: false
-            enable_custom_sidebar: false
-            sidebar_position: right
+            show_sidebar: true
+            enable_custom_sidebar: true
+            sidebar_position: left
             sidebar_widgets:
-              - widget: author_card
-              - widget: blog_stats
-              - widget: categories
-              - widget: tags
-              - widget: popular_posts
+              - widget: archive_sidebar
           children:
             - $formkit: switch
               id: archive_show_sidebar
               name: show_sidebar
               label: 显示侧边栏
               help: 控制归档页是否显示侧边栏
-              value: false
+              value: true
             - $formkit: switch
               id: archive_enable_custom_sidebar
               name: enable_custom_sidebar
               if: $get(archive_show_sidebar).value
               label: 定制侧边栏
               help: 启用后可单独配置此页面的侧边栏，禁用则使用全局配置
-              value: false
+              value: true
             - $formkit: toggle
               name: sidebar_position
               if: $get(archive_enable_custom_sidebar).value
@@ -2352,7 +2348,7 @@ spec:
               render-type: text
               size: 80
               gap: 10
-              value: right
+              value: left
               options:
                 - label: 左侧
                   value: left
@@ -2369,16 +2365,49 @@ spec:
                 - type: text
                   label: $value.widget
               value:
-                - widget: author_card
-                - widget: blog_stats
-                - widget: categories
-                - widget: tags
-                - widget: popular_posts
+                - widget: archive_sidebar
               children:
                 - $formkit: select
                   name: widget
                   label: 小工具类型
-                  options: *widget_options
+                  options:
+                    - label: 归档
+                      value: archive_sidebar
+                    - label: 欢迎卡片（天气）
+                      value: welcome_card
+                    - label: 作者卡片
+                      value: author_card
+                    - label: 博客统计
+                      value: blog_stats
+                    - label: 文章分类
+                      value: categories
+                    - label: 标签云
+                      value: tags
+                    - label: 热门文章
+                      value: popular_posts
+                    - label: 最新文章
+                      value: recent_posts
+                    - label: Steam 卡片
+                      value: steam_card
+                    - label: 追番卡片
+                      value: bangumi_card
+            - $formkit: group
+              name: archive_sidebar_config
+              label: [归档]
+              if: $get(archive_enable_custom_sidebar).value
+              value:
+                title: 归档
+              children:
+                - $formkit: text
+                  name: title
+                  label: 自定义标题
+                  help: 侧边栏展示的标题
+                - $formkit: iconify
+                  name: icon
+                  label: 自定义图标
+                  format: svg
+                  value-only: true
+                  help: 从图标库中选择 图标，如果留空将使用默认的日历图标。
         # 悬浮控制栏设置
         - $formkit: group
           name: floating_dock
