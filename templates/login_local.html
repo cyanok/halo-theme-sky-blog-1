@@ -4,29 +4,7 @@
 <!-- ========================================== -->
 
 <div th:remove="tag" th:fragment="form">
-    <!-- RSA 加密脚本 - 同时引入两个版本兼容 Halo 2.22.10 和 2.22.11，等待 2.22.12 发布后可移除 -->
-    <script src="/webjars/jsencrypt/3.5.4/bin/jsencrypt.min.js" defer></script>
-    <script src="/webjars/jsencrypt/3.3.2/bin/jsencrypt.min.js" defer></script>
-    <script th:inline="javascript" type="text/javascript">
-        const publicKey = /*[[${publicKey}]]*/ "";
-
-        function encryptPassword(password) {
-            const encrypt = new JSEncrypt();
-            encrypt.setPublicKey(publicKey);
-            return encrypt.encrypt(password);
-        }
-
-        document.addEventListener("DOMContentLoaded", function () {
-            const loginForm = document.getElementById("login-form");
-            loginForm.addEventListener("submit", function (event) {
-                const plainPasswordInput = document.getElementById("plainPassword");
-                const passwordInput = document.getElementById("password");
-                passwordInput.value = encryptPassword(plainPasswordInput.value);
-            });
-        });
-    </script>
-
-    <!-- 隐藏的加密密码字段 -->
+    <!-- 隐藏的加密密码字段 (加密逻辑在 common.html 的 basicScriptResources 中) -->
     <input type="hidden" name="password" id="password" />
 
     <!-- 用户名 -->

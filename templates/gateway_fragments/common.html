@@ -11,6 +11,29 @@
 
 <!-- 基础脚本资源 -->
 <th:block th:fragment="basicScriptResources">
+    <!-- RSA 密码加密 (Halo 2.23+ 官方架构：加密逻辑放在 common.html) -->
+    <th:block th:if="${not #strings.isEmpty(publicKey)} and ${fragmentTemplateName} == 'login_local'">
+        <script src="/webjars/jsencrypt/bin/jsencrypt.min.js" defer></script>
+        <script th:inline="javascript" type="text/javascript">
+            const publicKey = /*[[${publicKey}]]*/ "";
+
+            function encryptPassword(password) {
+                const encrypt = new JSEncrypt();
+                encrypt.setPublicKey(publicKey);
+                return encrypt.encrypt(password);
+            }
+
+            document.addEventListener("DOMContentLoaded", function () {
+                const loginForm = document.getElementById("login-form");
+                loginForm.addEventListener("submit", function (event) {
+                    const plainPasswordInput = document.getElementById("plainPassword");
+                    const passwordInput = document.getElementById("password");
+                    passwordInput.value = encryptPassword(plainPasswordInput.value);
+                });
+            });
+        </script>
+    </th:block>
+
     <script th:inline="javascript">
         const i18nResources = {
             sendVerificationCodeSuccess: '发送成功',
@@ -66,13 +89,11 @@
         };
     </script>
     <script type="module" src="/js/main.js"></script>
-    <!-- Altcha Captcha Scripts (Halo Pro only - auto-detects Pro version) -->
-    <th:block th:if="${globalInfo != null and #strings.contains(globalInfo.toString(), 'captchaProvider')}">
-        <th:block th:if="${#strings.equalsIgnoreCase(globalInfo.captchaProvider, 'ALTCHA')}">
-            <script async defer src="/webjars/altcha/2.0.3/dist/altcha.i18n.js" type="module"></script>
-            <script src="/js/altcha-lib.iife.js"></script>
-            <script src="/js/altcha-utils.js"></script>
-        </th:block>
+    <!-- Altcha Captcha Scripts (Halo Pro only) -->
+    <th:block th:if="${#strings.equalsIgnoreCase(globalInfo.captchaProvider, 'ALTCHA')}">
+        <script async defer src="/webjars/altcha/dist/altcha.i18n.js" type="module"></script>
+        <script src="/js/altcha-lib.iife.js"></script>
+        <script src="/js/altcha-utils.js"></script>
     </th:block>
 </th:block>
 <!-- 基础样式资源 -->
